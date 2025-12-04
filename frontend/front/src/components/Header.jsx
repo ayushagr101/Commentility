@@ -1,5 +1,6 @@
 import { Menu, Plus, Sparkles } from 'lucide-react';
 
+
 const Header = ({ onNewChat }) => {
   return (
     <header className="sticky top-0 z-10 bg-white border-b border-gray-200 px-4 py-3">

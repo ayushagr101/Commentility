@@ -35,7 +35,7 @@ const SearchBar = ({ onSend, disabled }) => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="How can Claude help you today?"
+          placeholder="How can Commenetility help you today?"
           disabled={disabled}
           rows={1}
           className="flex-1 px-5 py-4 bg-transparent border-none outline-none resize-none max-h-40 overflow-y-auto text-gray-800 placeholder:text-gray-400"
