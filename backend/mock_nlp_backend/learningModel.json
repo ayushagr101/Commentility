@@ -1,0 +1,17 @@
+{
+  "wordWeights": {
+    "bad": -1.2000000000000002,
+    "like": 0.7000000000000001,
+    "meh": -0.5,
+    "disappointing": -1.6
+  },
+  "sentimentThresholds": {
+    "positive": 0.4,
+    "negative": -0.30000000000000004
+  },
+  "feedbackHistory": [],
+  "accuracyMetrics": {
+    "correct": 38,
+    "total": 45
+  }
+}

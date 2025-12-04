@@ -22,16 +22,32 @@ function App() {
     const userMessage = { role: 'user', content: text };
     setMessages(prev => [...prev, userMessage]);
     setIsTyping(true);
-
-    // Simulate AI response
-    setTimeout(() => {
-      const aiResponse = {
-        role: 'assistant',
-        content: "I'm a demo Claude interface! In a real implementation, I would connect to the Claude API to provide intelligent responses. For now, I'm showing you how the interface works with beautiful Tailwind CSS styling."
-      };
+    // Call heuristic backend analyzer at /analyze
+    try {
+      const resp = await fetch('/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ comment: text })
+      });
+      if (!resp.ok) throw new Error(`Server responded ${resp.status}`);
+      const body = await resp.json();
+      let assistantText = '';
+      if (body && body.success && body.data) {
+        const d = body.data;
+        assistantText = `Sentiment: ${d.sentiment}\nScore: ${d.score}\nExplanation: ${d.explanation}`;
+      } else if (body && body.message) {
+        assistantText = `Analysis failed: ${body.message}`;
+      } else {
+        assistantText = `Analysis returned unexpected result.`;
+      }
+      const aiResponse = { role: 'assistant', content: assistantText };
       setMessages(prev => [...prev, aiResponse]);
+    } catch (err) {
+      const aiResponse = { role: 'assistant', content: `Error analyzing comment: ${err.message || err}` };
+      setMessages(prev => [...prev, aiResponse]);
+    } finally {
       setIsTyping(false);
-    }, 1000);
+    }
   };
 
   const handleNewChat = () => {

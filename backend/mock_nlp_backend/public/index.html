@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Comment Sentiment Analyzer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🎬 YouTube Comment Sentiment Analyzer</h1>
+      <p>AI-Powered with Adaptive Learning - The model learns from your feedback!</p>
+    </header>
+
+    <main>
+      <section class="analyzer-section">
+        <!-- File Upload Section -->
+        <div class="upload-section">
+          <h2>📁 Upload JSON File</h2>
+          <p>Upload a JSON file containing comments for batch analysis</p>
+          <div class="file-input-wrapper">
+            <input type="file" id="fileInput" accept=".json,application/json" class="file-input">
+            <label for="fileInput" class="file-label">Choose JSON File</label>
+            <span id="fileName" class="file-name">No file chosen</span>
+          </div>
+          <button id="uploadBtn" class="btn-primary" disabled>Analyze File</button>
+          <div class="file-format-info">
+            <p><strong>Expected JSON format:</strong></p>
+            <code>{"comments": [{"id": 1, "text": "Your comment here"}, ...]}</code>
+            <p>or simply an array: <code>[{"text": "comment"}, ...]</code></p>
+          </div>
+        </div>
+
+        <div class="divider">
+          <span>OR</span>
+        </div>
+
+        <!-- Single Comment Analysis Section -->
+        <div class="input-group">
+          <label for="commentInput">Enter a YouTube Comment:</label>
+          <textarea id="commentInput" placeholder="Paste your YouTube comment here..." rows="4"></textarea>
+          <button id="analyzeBtn" class="btn-primary">Analyze Sentiment</button>
+        </div>
+
+        <div id="resultContainer" class="result-container hidden">
+          <div class="result-card">
+            <div class="sentiment-display">
+              <div id="sentimentBadge" class="sentiment-badge"></div>
+              <div class="sentiment-details">
+                <h2 id="sentimentLabel">Loading...</h2>
+                <p id="confidenceText">Confidence: --</p>
+                <p id="scoreText">Score: --</p>
+                <p id="modelAccuracyText" class="hidden">Model Accuracy: --</p>
+              </div>
+            </div>
+
+            <div class="details-section">
+              <h3>Analysis Details</h3>
+              <div id="detailsList" class="details-list"></div>
+            </div>
+
+            <!-- Feedback section (always shown) -->
+            <div id="feedbackSection" class="feedback-section">
+              <h3>🎓 Train the Model</h3>
+              <p>Is this prediction correct? Help train the model!</p>
+              <div class="feedback-buttons">
+                <button class="feedback-btn correct-btn" data-sentiment="correct">✓ Correct</button>
+                <button class="feedback-btn incorrect-btn" data-sentiment="incorrect">✗ Incorrect</button>
+              </div>
+              <div id="feedbackOptions" class="feedback-options hidden">
+                <p>What's the correct sentiment?</p>
+                <button class="sentiment-select-btn" data-sentiment="Positive">😊 Positive</button>
+                <button class="sentiment-select-btn" data-sentiment="Negative">😞 Negative</button>
+                <button class="sentiment-select-btn" data-sentiment="Neutral">😐 Neutral</button>
+              </div>
+              <p id="feedbackMessage" class="feedback-message hidden"></p>
+            </div>
+
+            <div class="comment-echo">
+              <p><strong>Your Comment:</strong></p>
+              <p id="commentEcho" class="comment-text"></p>
+            </div>
+          </div>
+        </div>
+
+        <div id="errorContainer" class="error-container hidden">
+          <p id="errorMessage"></p>
+        </div>
+
+        <!-- File Analysis Results -->
+        <div id="fileResultsContainer" class="file-results-container hidden">
+          <div class="file-results-header">
+            <h2>📊 Batch Analysis Results</h2>
+            <button id="closeFileResults" class="close-btn">✕</button>
+          </div>
+          
+          <div class="summary-stats">
+            <h3>Summary</h3>
+            <div class="summary-grid">
+              <div class="summary-item">
+                <span class="summary-label">Total Comments:</span>
+                <span id="summaryTotal" class="summary-value">0</span>
+              </div>
+              <div class="summary-item positive">
+                <span class="summary-label">😊 Positive:</span>
+                <span id="summaryPositive" class="summary-value">0</span>
+              </div>
+              <div class="summary-item negative">
+                <span class="summary-label">😞 Negative:</span>
+                <span id="summaryNegative" class="summary-value">0</span>
+              </div>
+              <div class="summary-item neutral">
+                <span class="summary-label">😐 Neutral:</span>
+                <span id="summaryNeutral" class="summary-value">0</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Avg Confidence:</span>
+                <span id="summaryConfidence" class="summary-value">0%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="detailed-results">
+            <h3>Detailed Results</h3>
+            <div id="fileResultsList" class="results-list"></div>
+          </div>
+
+          <button id="downloadResults" class="btn-secondary">Download Results as JSON</button>
+        </div>
+      </section>
+
+      <section class="stats-section">
+        <h2>Quick Stats</h2>
+        <p>Analyze multiple comments to see sentiment distribution</p>
+        <div class="stats-grid">
+          <div class="stat-card positive">
+            <span id="positiveCount">0</span>
+            <p>Positive</p>
+          </div>
+          <div class="stat-card neutral">
+            <span id="neutralCount">0</span>
+            <p>Neutral</p>
+          </div>
+          <div class="stat-card negative">
+            <span id="negativeCount">0</span>
+            <p>Negative</p>
+          </div>
+        </div>
+
+        <!-- Model Stats (always shown) -->
+        <div id="modelStatsSection" class="model-stats">
+          <h3>🤖 Model Performance</h3>
+          <div class="model-stats-grid">
+            <div class="model-stat">
+              <span id="modelAccuracy">N/A</span>
+              <p>Accuracy</p>
+            </div>
+            <div class="model-stat">
+              <span id="feedbackCount">0</span>
+              <p>Feedback Given</p>
+            </div>
+            <div class="model-stat">
+              <span id="learnedWords">0</span>
+              <p>Words Learned</p>
+            </div>
+          </div>
+          <button id="resetModelBtn" class="btn-secondary">Reset Model</button>
+        </div>
+
+        <button id="resetBtn" class="btn-secondary">Reset Stats</button>
+      </section>
+    </main>
+
+    <footer>
+      <p>Heuristic Sentiment Analyzer with Adaptive Learning | Made for YouTube Comment Analysis</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
