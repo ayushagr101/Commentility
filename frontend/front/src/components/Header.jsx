@@ -10,7 +10,7 @@ const Header = ({ onNewChat }) => {
           </button>
           <div className="flex items-center gap-2">
             <Sparkles size={24} className="text-amber-600" />
-            <h1 className="text-xl font-semibold text-gray-800">Claude</h1>
+            <h1 className="text-xl font-semibold text-gray-800">Commentility</h1>
           </div>
         </div>
         <button

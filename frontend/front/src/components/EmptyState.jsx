@@ -1,3 +1,5 @@
+
+
 import { Sparkles } from 'lucide-react';
 
 const EmptyState = () => {

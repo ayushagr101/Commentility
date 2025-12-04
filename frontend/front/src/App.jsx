@@ -23,7 +23,6 @@ function App() {
     setMessages(prev => [...prev, userMessage]);
     setIsTyping(true);
 
-    // Simulate AI response
     setTimeout(() => {
       const aiResponse = {
         role: 'assistant',
