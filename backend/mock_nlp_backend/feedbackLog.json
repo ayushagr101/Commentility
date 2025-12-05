@@ -1,0 +1,362 @@
+[
+  {
+    "comment": "Kon kon today 2 December 2025 mein sun raha hai ❤❤❤",
+    "predicted": "Neutral",
+    "actual": "Neutral",
+    "score": 0,
+    "correct": true,
+    "timestamp": "2025-12-04T17:42:13.360Z"
+  },
+  {
+    "comment": "Kon kon today 2 December 2025 mein sun raha hai ❤❤❤",
+    "predicted": "Neutral",
+    "actual": "Neutral",
+    "score": 0,
+    "correct": true,
+    "timestamp": "2025-12-04T17:42:43.314Z"
+  },
+  {
+    "comment": "Kon kon today 2 December 2025 mein sun raha hai ❤❤❤",
+    "predicted": "Neutral",
+    "actual": "Positive",
+    "score": 0,
+    "correct": false,
+    "timestamp": "2025-12-04T17:42:52.416Z"
+  },
+  {
+    "comment": "Feels like Sonu Nigam's version of 'yeh haseen wadiyan'  \nHis voice is blessing to ears ✨",
+    "predicted": "Positive",
+    "actual": "Positive",
+    "score": 0.8,
+    "correct": true,
+    "timestamp": "2025-12-04T17:44:55.441Z"
+  },
+  {
+    "comment": "Feels like Sonu Nigam's version of 'yeh haseen wadiyan'  \nHis voice is blessing to ears ✨",
+    "predicted": "Positive",
+    "actual": "Positive",
+    "score": 0.8,
+    "correct": true,
+    "timestamp": "2025-12-04T17:44:57.385Z"
+  },
+  {
+    "comment": "I love this video! Great content and very helpful.",
+    "predicted": "Positive",
+    "actual": "Positive",
+    "score": 5.3,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.253Z"
+  },
+  {
+    "comment": "This is terrible, worst video I've ever seen.",
+    "predicted": "Negative",
+    "actual": "Negative",
+    "score": -4,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.260Z"
+  },
+  {
+    "comment": "The channel is ok, nothing special.",
+    "predicted": "Neutral",
+    "actual": "Neutral",
+    "score": 0,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.265Z"
+  },
+  {
+    "comment": "Amazing tutorial! This really helped me understand the concept. Thank you! 😍",
+    "predicted": "Positive",
+    "actual": "Positive",
+    "score": 5.1,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.270Z"
+  },
+  {
+    "comment": "Total waste of time. Boring and useless.",
+    "predicted": "Negative",
+    "actual": "Negative",
+    "score": -4.5,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.277Z"
+  },
+  {
+    "comment": "Not bad, but could be better.",
+    "predicted": "Positive",
+    "actual": "Neutral",
+    "score": 1,
+    "correct": false,
+    "timestamp": "2025-12-04T17:52:44.291Z"
+  },
+  {
+    "comment": "I don't like this video very much.",
+    "predicted": "Positive",
+    "actual": "Negative",
+    "score": 0.8,
+    "correct": false,
+    "timestamp": "2025-12-04T17:52:44.303Z"
+  },
+  {
+    "comment": "Absolutely fantastic! Best video ever! 👍",
+    "predicted": "Positive",
+    "actual": "Positive",
+    "score": 6.6,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.305Z"
+  },
+  {
+    "comment": "This is just ok, nothing impressive.",
+    "predicted": "Neutral",
+    "actual": "Neutral",
+    "score": 0,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.311Z"
+  },
+  {
+    "comment": "Hate this channel! Everything is bad! 😡",
+    "predicted": "Negative",
+    "actual": "Negative",
+    "score": -4.5,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.317Z"
+  },
+  {
+    "comment": "This is not good at all, very disappointing.",
+    "predicted": "Negative",
+    "actual": "Negative",
+    "score": -3.25,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.321Z"
+  },
+  {
+    "comment": "The video is extremely helpful and informative, thank you so much!",
+    "predicted": "Positive",
+    "actual": "Positive",
+    "score": 3.3,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.328Z"
+  },
+  {
+    "comment": "Better than I expected, glad I watched this.",
+    "predicted": "Neutral",
+    "actual": "Positive",
+    "score": 0,
+    "correct": false,
+    "timestamp": "2025-12-04T17:52:44.335Z"
+  },
+  {
+    "comment": "Absolutely awful! Worst explanation ever! This doesn't help at all.",
+    "predicted": "Negative",
+    "actual": "Negative",
+    "score": -4.4,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.341Z"
+  },
+  {
+    "comment": "This is not terrible, actually quite good.",
+    "predicted": "Positive",
+    "actual": "Positive",
+    "score": 3,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.345Z"
+  },
+  {
+    "comment": "Meh, it's alright I guess. Nothing special but not bad either.",
+    "predicted": "Positive",
+    "actual": "Neutral",
+    "score": 0.6,
+    "correct": false,
+    "timestamp": "2025-12-04T17:52:44.352Z"
+  },
+  {
+    "comment": "I'm really disappointed with this content. Very unhelpful.",
+    "predicted": "Negative",
+    "actual": "Negative",
+    "score": -2.25,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.359Z"
+  },
+  {
+    "comment": "Absolutely loved it! This is the best tutorial I've ever seen! 😍👍",
+    "predicted": "Positive",
+    "actual": "Positive",
+    "score": 5.6,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.362Z"
+  },
+  {
+    "comment": "Not good, not bad. Just average.",
+    "predicted": "Neutral",
+    "actual": "Neutral",
+    "score": 0.2,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.366Z"
+  },
+  {
+    "comment": "This helped me so much! Excellent explanation, very clear! Thank you!",
+    "predicted": "Positive",
+    "actual": "Positive",
+    "score": 4.15,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.369Z"
+  },
+  {
+    "comment": "Horrible video. Complete waste of my time.",
+    "predicted": "Negative",
+    "actual": "Negative",
+    "score": -1.5,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.373Z"
+  },
+  {
+    "comment": "It's okay but could be much better.",
+    "predicted": "Neutral",
+    "actual": "Neutral",
+    "score": 0,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.377Z"
+  },
+  {
+    "comment": "This is seriously the worst thing I've ever watched. Hate everything about it.",
+    "predicted": "Negative",
+    "actual": "Negative",
+    "score": -4,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.383Z"
+  },
+  {
+    "comment": "Pretty good content, enjoyed watching this! 😊",
+    "predicted": "Positive",
+    "actual": "Positive",
+    "score": 2.3,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.385Z"
+  },
+  {
+    "comment": "Never seen such a bad explanation in my life!",
+    "predicted": "Negative",
+    "actual": "Negative",
+    "score": -0.9,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.391Z"
+  },
+  {
+    "comment": "Excellent work! This is exactly what I needed. Fantastic!",
+    "predicted": "Positive",
+    "actual": "Positive",
+    "score": 5.1,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.394Z"
+  },
+  {
+    "comment": "Not really my cup of tea, boring content.",
+    "predicted": "Negative",
+    "actual": "Negative",
+    "score": -1,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.398Z"
+  },
+  {
+    "comment": "Love the energy! Great production quality and very informative. Best channel!",
+    "predicted": "Positive",
+    "actual": "Positive",
+    "score": 8.4,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.404Z"
+  },
+  {
+    "comment": "Don't waste your time on this video.",
+    "predicted": "Negative",
+    "actual": "Negative",
+    "score": -1.5,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.410Z"
+  },
+  {
+    "comment": "Surprisingly good! I thought it would be boring but it's actually amazing!",
+    "predicted": "Positive",
+    "actual": "Positive",
+    "score": 2.6,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.419Z"
+  },
+  {
+    "comment": "This is not helpful and confusing. Very poor quality.",
+    "predicted": "Negative",
+    "actual": "Negative",
+    "score": -0.7,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.423Z"
+  },
+  {
+    "comment": "Finally found what I was looking for! Thank you so much! 👍😍",
+    "predicted": "Positive",
+    "actual": "Positive",
+    "score": 4.1,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.426Z"
+  },
+  {
+    "comment": "Terrible explanation. Doesn't make any sense.",
+    "predicted": "Negative",
+    "actual": "Negative",
+    "score": -2,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.428Z"
+  },
+  {
+    "comment": "Amazing quality! Really appreciate the effort. Very well done!",
+    "predicted": "Positive",
+    "actual": "Positive",
+    "score": 5.65,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.434Z"
+  },
+  {
+    "comment": "Not worth watching. Disappointing content.",
+    "predicted": "Positive",
+    "actual": "Negative",
+    "score": 1.5,
+    "correct": false,
+    "timestamp": "2025-12-04T17:52:44.437Z"
+  },
+  {
+    "comment": "Absolutely brilliant! Can't wait for more content like this!",
+    "predicted": "Positive",
+    "actual": "Positive",
+    "score": 4.3,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.441Z"
+  },
+  {
+    "comment": "Meh... nothing special. I've seen better.",
+    "predicted": "Negative",
+    "actual": "Neutral",
+    "score": -0.6,
+    "correct": false,
+    "timestamp": "2025-12-04T17:52:44.444Z"
+  },
+  {
+    "comment": "This is fantastic! Really helped me understand. Extremely grateful!",
+    "predicted": "Positive",
+    "actual": "Positive",
+    "score": 4.85,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.450Z"
+  },
+  {
+    "comment": "Not bad at all! Actually quite impressive for a free video.",
+    "predicted": "Positive",
+    "actual": "Positive",
+    "score": 1.5,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.453Z"
+  },
+  {
+    "comment": "Worst tutorial ever. Couldn't understand a thing. Terrible!",
+    "predicted": "Negative",
+    "actual": "Negative",
+    "score": -3.7,
+    "correct": true,
+    "timestamp": "2025-12-04T17:52:44.456Z"
+  }
+]
