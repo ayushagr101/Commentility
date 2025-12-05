@@ -22,6 +22,12 @@ function App() {
     const userMessage = { role: 'user', content: text };
     setMessages(prev => [...prev, userMessage]);
     setIsTyping(true);
+
+    setTimeout(() => {
+      const aiResponse = {
+        role: 'assistant',
+        content: "I'm a demo Claude interface! In a real implementation, I would connect to the Claude API to provide intelligent responses. For now, I'm showing you how the interface works with beautiful Tailwind CSS styling."
+      };
     // Call heuristic backend analyzer at /analyze
     try {
       const resp = await fetch('/analyze', {

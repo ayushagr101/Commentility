@@ -1,5 +1,6 @@
 import { Menu, Plus, Sparkles } from 'lucide-react';
 
+
 const Header = ({ onNewChat }) => {
   return (
     <header className="sticky top-0 z-10 bg-white border-b border-gray-200 px-4 py-3">
@@ -10,7 +11,7 @@ const Header = ({ onNewChat }) => {
           </button>
           <div className="flex items-center gap-2">
             <Sparkles size={24} className="text-amber-600" />
-            <h1 className="text-xl font-semibold text-gray-800">Claude</h1>
+            <h1 className="text-xl font-semibold text-gray-800">Commentility</h1>
           </div>
         </div>
         <button
