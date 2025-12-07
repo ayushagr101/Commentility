@@ -1,6 +1,6 @@
 // backend/src/controllers/comments.js
-const dotenv = require('dotenv');
-const { google } = require('googleapis');
+import dotenv from 'dotenv';
+import { google } from 'googleapis';
 
 dotenv.config();
 
@@ -9,7 +9,7 @@ const youtube = google.youtube({
   auth: process.env.GOOGLE_API_KEY,
 });
 
-async function fetchThreads(videoId) {
+export async function fetchThreads(videoId) {
   const collected = [];
   let nextPageToken;
 
@@ -56,7 +56,7 @@ function flattenComments(threads) {
   });
 }
 
-async function getComments(req, res) {
+export async function getComments(req, res) {
   try {
     const { videoId } = req.body;
     if (!videoId) {
@@ -75,8 +75,3 @@ async function getComments(req, res) {
     return res.status(502).json({ message: 'Unable to fetch comments from YouTube' });
   }
 }
-
-module.exports = {
-  fetchThreads,
-  getComments,
-};
