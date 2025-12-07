@@ -1,31 +1,14 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Send, Sparkles, Zap, Menu } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Youtube, Sparkles, TrendingUp, MessageSquare, ThumbsUp, BarChart3 } from "lucide-react";
 import Balatro from "./Balatro";
 import Sidebar from "../src/components/Sidebar";
 
 const HomePage = () => {
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
+  const [youtubeUrl, setYoutubeUrl] = useState("");
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [results, setResults] = useState(null);
+  const [error, setError] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const messagesEndRef = useRef(null);
-  const navigate = useNavigate();
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  const examplePrompts = [
-    { icon: "💬", text: "What can Commentility do?" },
-    { icon: "🎯", text: "Help me analyze comments" },
-    { icon: "🚀", text: "Show me trending topics" },
-    { icon: "💡", text: "Explain sentiment analysis" }
-  ];
 
   const conversations = [
     { title: "Comment Analysis Session", time: "2h ago" },
@@ -33,45 +16,51 @@ const HomePage = () => {
     { title: "Topic Modeling Discussion", time: "3 days ago" }
   ];
 
-  const handleSend = async () => {
-    if (!input.trim()) return;
+  const handleAnalyze = async () => {
+    if (!youtubeUrl.trim()) {
+      setError("Please enter a YouTube URL");
+      return;
+    }
 
-    const userMessage = { role: "user", content: input };
-    setMessages(prev => [...prev, userMessage]);
-    setInput("");
-    setIsTyping(true);
+    setIsAnalyzing(true);
+    setError(null);
+    setResults(null);
 
-    setTimeout(() => {
-      const responses = [
-        "Welcome to Commentility! I'm here to help you analyze comments and understand sentiment patterns.",
-        "Hello! I'm your AI assistant. What would you like to know about comment analysis?",
-        "I'm detecting your query. Let me analyze the situation and provide you with the best possible response.",
-        "Great question! Let's explore this together. How can I assist you today?"
-      ];
-      
-      const aiMessage = {
-        role: "assistant",
-        content: responses[Math.floor(Math.random() * responses.length)]
-      };
-      
-      setMessages(prev => [...prev, aiMessage]);
-      setIsTyping(false);
-    }, 1500);
+    try {
+      const response = await fetch("http://localhost:8000/api/v1/users/analyze-comments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ youtubeUrl }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to analyze comments");
+      }
+
+      setResults(data.data);
+    } catch (err) {
+      setError(err.message);
+      console.error("Analysis error:", err);
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
-  const handlePromptClick = (text) => {
-    setInput(text);
+  const handleNewAnalysis = () => {
+    setYoutubeUrl("");
+    setResults(null);
+    setError(null);
   };
 
   return (
     <div className="flex h-screen bg-black text-white overflow-hidden">
-      {/* Animated Background with Balatro */}
+      {/* Animated Background */}
       <div className="absolute inset-0 opacity-20">
-        <Balatro
-  isRotate={false}
-  mouseInteraction={false}
-  pixelFilter={700}
-/>
+        <Balatro isRotate={false} mouseInteraction={false} pixelFilter={700} />
       </div>
       
       <div className="absolute inset-0 opacity-10">
@@ -84,141 +73,184 @@ const HomePage = () => {
       <Sidebar 
         sidebarOpen={sidebarOpen}
         conversations={conversations}
-        onNewChat={() => {
-          setMessages([]);
-          setInput("");
-        }}
+        onNewChat={handleNewAnalysis}
       />
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col relative z-10">
         {/* Header */}
         <div className="h-16 border-b border-cyan-500 border-opacity-20 flex items-center px-6 bg-gray-900 bg-opacity-60 backdrop-blur-sm">
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2 hover:bg-cyan-500 hover:bg-opacity-10 rounded-lg transition-all"
-          >
-            <Menu className="w-5 h-5 text-cyan-400" />
-          </button>
           <div className="flex-1 text-center">
-            <h1 className="text-lg font-bold neon-cyan retro-title">Commentility AI Assistant</h1>
+            <h1 className="text-lg font-bold neon-cyan retro-title">Commentility - YouTube Comment Analyzer</h1>
           </div>
-          <div className="w-9" /> {/* Spacer for centering */}
         </div>
 
-        {/* Messages Area */}
+        {/* Main Area */}
         <div className="flex-1 overflow-y-auto px-6 py-8">
-          {messages.length === 0 ? (
-            <div className="max-w-3xl mx-auto">
-              {/* Welcome Section */}
-              <div className="text-center mb-12 animate-fadeIn">
-                <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-2xl shadow-cyan-500/50 animate-spin" style={{ animationDuration: '20s' }}>
-                  <Sparkles className="w-12 h-12 text-white" />
+          <div className="max-w-5xl mx-auto">
+            {!results ? (
+              // Input Section
+              <div className="animate-fadeIn">
+                {/* Welcome Section */}
+                <div className="text-center mb-12">
+                  <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-2xl shadow-cyan-500/50 animate-spin" style={{ animationDuration: '20s' }}>
+                    <Youtube className="w-12 h-12 text-white" />
+                  </div>
+                  <h2 className="text-5xl font-white neon-cyan mb-4 retro-title flicker">
+                    ANALYZE YOUTUBE COMMENTS
+                  </h2>
+                  <p className="text-xl text-cyan-400 text-opacity-70 mb-2">
+                    AI-Powered Sentiment Analysis & Word Cloud Generation
+                  </p>
                 </div>
-                <h2 className="text-5xl font-white neon-cyan mb-4 retro-title flicker">
-                  WELCOME TO COMMENTILITY
-                </h2>
-                <p className="text-xl text-cyan-400 text-opacity-70 mb-2">
-                  AI-Powered Comment Analysis
-                </p>
-              </div>
 
-              {/* Example Prompts */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {examplePrompts.map((prompt, i) => (
+                {/* Input Form */}
+                <div className="bg-gradient-to-br from-gray-800 to-black border-2 border-cyan-500 border-opacity-30 rounded-2xl p-8 mb-8">
+                  <label className="block text-cyan-400 font-semibold mb-3 text-lg">
+                    Enter YouTube Video URL
+                  </label>
+                  <div className="flex gap-4">
+                    <input
+                      type="text"
+                      value={youtubeUrl}
+                      onChange={(e) => setYoutubeUrl(e.target.value)}
+                      onKeyPress={(e) => e.key === "Enter" && !isAnalyzing && handleAnalyze()}
+                      placeholder="https://www.youtube.com/watch?v=..."
+                      className="flex-1 px-6 py-4 bg-black bg-opacity-60 rounded-xl text-white border-2 border-cyan-500 border-opacity-30 focus:border-cyan-400 outline-none text-base transition-all"
+                      disabled={isAnalyzing}
+                    />
+                    <button
+                      onClick={handleAnalyze}
+                      disabled={isAnalyzing || !youtubeUrl.trim()}
+                      className={`px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 font-semibold transition-all shadow-lg shadow-cyan-500/30 ${
+                        isAnalyzing || !youtubeUrl.trim()
+                          ? "opacity-50 cursor-not-allowed"
+                          : "hover:scale-105 cursor-pointer"
+                      }`}
+                    >
+                      {isAnalyzing ? (
+                        <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          Analyzing...
+                        </div>
+                      ) : (
+                        "Analyze"
+                      )}
+                    </button>
+                  </div>
+                  
+                  {error && (
+                    <div className="mt-4 p-4 bg-red-500 bg-opacity-20 border border-red-500 rounded-lg text-red-300">
+                      ⚠️ {error}
+                    </div>
+                  )}
+                </div>
+
+                {/* Features */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="p-6 bg-gradient-to-br from-gray-800 to-black border-2 border-cyan-500 border-opacity-30 rounded-2xl">
+                    <BarChart3 className="w-10 h-10 text-cyan-400 mb-4" />
+                    <h3 className="text-cyan-400 font-semibold text-lg mb-2">Sentiment Analysis</h3>
+                    <p className="text-gray-400 text-sm">Analyze positive, negative, and neutral sentiments</p>
+                  </div>
+                  <div className="p-6 bg-gradient-to-br from-gray-800 to-black border-2 border-cyan-500 border-opacity-30 rounded-2xl">
+                    <Sparkles className="w-10 h-10 text-cyan-400 mb-4" />
+                    <h3 className="text-cyan-400 font-semibold text-lg mb-2">Word Cloud</h3>
+                    <p className="text-gray-400 text-sm">Visualize most frequent words in comments</p>
+                  </div>
+                  <div className="p-6 bg-gradient-to-br from-gray-800 to-black border-2 border-cyan-500 border-opacity-30 rounded-2xl">
+                    <TrendingUp className="w-10 h-10 text-cyan-400 mb-4" />
+                    <h3 className="text-cyan-400 font-semibold text-lg mb-2">Top Comments</h3>
+                    <p className="text-gray-400 text-sm">Discover the most liked comments</p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              // Results Section
+              <div className="animate-fadeIn space-y-6">
+                {/* Header with New Analysis Button */}
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-3xl font-bold neon-cyan">Analysis Results</h2>
                   <button
-                    key={i}
-                    onClick={() => handlePromptClick(prompt.text)}
-                    className="p-6 bg-gradient-to-br from-gray-800 to-black border-2 border-cyan-500 border-opacity-30 rounded-2xl hover:border-opacity-60 hover:scale-[1.02] transition-all text-left group"
+                    onClick={handleNewAnalysis}
+                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 font-semibold hover:scale-105 transition-all shadow-lg shadow-cyan-500/30"
                   >
-                    <div className="text-3xl mb-3">{prompt.icon}</div>
-                    <div className="text-cyan-400 font-semibold group-hover:text-cyan-300 transition-colors">
-                      {prompt.text}
-                    </div>
+                    New Analysis
                   </button>
-                ))}
+                </div>
+
+                {/* Summary Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="p-6 bg-gradient-to-br from-gray-800 to-black border-2 border-cyan-500 border-opacity-30 rounded-2xl">
+                    <div className="flex items-center gap-3 mb-3">
+                      <MessageSquare className="w-6 h-6 text-cyan-400" />
+                      <h3 className="text-cyan-400 font-semibold text-lg">Total Comments</h3>
+                    </div>
+                    <p className="text-4xl font-bold text-white">{results.summary.totalComments}</p>
+                  </div>
+                  
+                  <div className="p-6 bg-gradient-to-br from-gray-800 to-black border-2 border-cyan-500 border-opacity-30 rounded-2xl">
+                    <div className="flex items-center gap-3 mb-3">
+                      <TrendingUp className="w-6 h-6 text-cyan-400" />
+                      <h3 className="text-cyan-400 font-semibold text-lg">Net Sentiment</h3>
+                    </div>
+                    <p className="text-4xl font-bold text-white">{results.summary.netSentiment}</p>
+                  </div>
+                </div>
+
+                {/* Visualizations */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {results.sentimentGraph && (
+                    <div className="p-6 bg-gradient-to-br from-gray-800 to-black border-2 border-cyan-500 border-opacity-30 rounded-2xl">
+                      <h3 className="text-cyan-400 font-semibold text-lg mb-4">Sentiment Distribution</h3>
+                      <img src={results.sentimentGraph} alt="Sentiment Graph" className="w-full rounded-lg" />
+                    </div>
+                  )}
+                  
+                  {results.wordcloud && (
+                    <div className="p-6 bg-gradient-to-br from-gray-800 to-black border-2 border-cyan-500 border-opacity-30 rounded-2xl">
+                      <h3 className="text-cyan-400 font-semibold text-lg mb-4">Word Cloud</h3>
+                      <img src={results.wordcloud} alt="Word Cloud" className="w-full rounded-lg" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Top Comment */}
+                {results.summary.topComment && (
+                  <div className="p-6 bg-gradient-to-br from-gray-800 to-black border-2 border-cyan-500 border-opacity-30 rounded-2xl">
+                    <div className="flex items-center gap-3 mb-4">
+                      <ThumbsUp className="w-6 h-6 text-cyan-400" />
+                      <h3 className="text-cyan-400 font-semibold text-lg">Top Comment</h3>
+                    </div>
+                    <div className="bg-black bg-opacity-40 p-4 rounded-lg">
+                      <p className="text-white mb-2">{results.summary.topComment.text}</p>
+                      <div className="flex items-center gap-4 text-sm text-gray-400">
+                        <span>👤 {results.summary.topComment.author}</span>
+                        <span>👍 {results.summary.topComment.likes} likes</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Top 3 Comments */}
+                {results.topComments && results.topComments.length > 0 && (
+                  <div className="p-6 bg-gradient-to-br from-gray-800 to-black border-2 border-cyan-500 border-opacity-30 rounded-2xl">
+                    <h3 className="text-cyan-400 font-semibold text-lg mb-4">Top 3 Comments</h3>
+                    <div className="space-y-4">
+                      {results.topComments.map((comment, idx) => (
+                        <div key={idx} className="bg-black bg-opacity-40 p-4 rounded-lg">
+                          <p className="text-white mb-2">{comment.text}</p>
+                          <div className="flex items-center gap-4 text-sm text-gray-400">
+                            <span>👤 {comment.author}</span>
+                            <span>👍 {comment.likes} likes</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-
-              {/* Features */}
-              
-            </div>
-          ) : (
-            <div className="max-w-3xl mx-auto space-y-6">
-              {messages.map((msg, i) => (
-                <div
-                  key={i}
-                  className={`flex gap-4 animate-fadeIn ${
-                    msg.role === "user" ? "justify-end" : "justify-start"
-                  }`}
-                >
-                  {msg.role === "assistant" && (
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center flex-shrink-0">
-                      <Zap className="w-5 h-5 text-white" />
-                    </div>
-                  )}
-                  <div
-                    className={`max-w-[80%] p-4 rounded-2xl ${
-                      msg.role === "user"
-                        ? "bg-gradient-to-br from-cyan-500 to-blue-600 text-white"
-                        : "bg-gray-800 bg-opacity-60 border border-cyan-500 border-opacity-30 text-cyan-100"
-                    }`}
-                  >
-                    {msg.content}
-                  </div>
-                  {msg.role === "user" && (
-                    <div className="w-10 h-10 rounded-lg bg-gray-700 flex items-center justify-center flex-shrink-0">
-                      <span className="text-cyan-400 font-bold">U</span>
-                    </div>
-                  )}
-                </div>
-              ))}
-              {isTyping && (
-                <div className="flex gap-4 animate-fadeIn">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center flex-shrink-0">
-                    <Zap className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="bg-gray-800 bg-opacity-60 border border-cyan-500 border-opacity-30 p-4 rounded-2xl">
-                    <div className="flex gap-2">
-                      <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" />
-                      <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }} />
-                      <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: "0.4s" }} />
-                    </div>
-                  </div>
-                </div>
-              )}
-              <div ref={messagesEndRef} />
-            </div>
-          )}
-        </div>
-
-        {/* Input Area */}
-        <div className="border-t border-red-600 border-opacity-20 p-6 bg-gray-900 bg-opacity-60 backdrop-blur-sm">
-          <div className="max-w-3xl mx-auto">
-            <div className="relative">
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && handleSend()}
-                placeholder="Send a message to Commentility..."
-                className="w-full px-6 py-4 pr-14 bg-black bg-opacity-60 rounded-2xl text-white border-2 border-cyan-500 border-opacity-30 focus:border-cyan-400 outline-none text-base transition-all"
-                disabled={isTyping}
-              />
-              <button
-                onClick={handleSend}
-                disabled={!input.trim() || isTyping}
-                className={`absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center transition-all shadow-lg shadow-cyan-500/30 ${
-                  input.trim() && !isTyping
-                    ? "opacity-100 hover:scale-105 cursor-pointer"
-                    : "opacity-50 cursor-not-allowed"
-                }`}
-              >
-                <Send className="w-5 h-5 text-white" />
-              </button>
-            </div>
-            <div className="mt-3 text-center text-xs text-cyan-500 text-opacity-40">
-              Powered by Commentility • AI Assistant v1.0
-            </div>
+            )}
           </div>
         </div>
       </div>

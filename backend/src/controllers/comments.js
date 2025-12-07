@@ -9,7 +9,7 @@ const youtube = google.youtube({
   auth: process.env.GOOGLE_API_KEY,
 });
 
-export async function fetchThreads(videoId) {
+export async function fetchThreads(videoId, maxComments = null) {
   const collected = [];
   let nextPageToken;
 
@@ -24,6 +24,11 @@ export async function fetchThreads(videoId) {
 
     collected.push(...(data.items ?? []));
     nextPageToken = data.nextPageToken;
+    
+    // Stop if we've reached the max comments limit
+    if (maxComments && collected.length >= maxComments) {
+      return collected.slice(0, maxComments);
+    }
   } while (nextPageToken);
 
   return collected;
