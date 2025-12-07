@@ -17,7 +17,7 @@ const VideoSentimentSchema = new mongoose.Schema(
       type: String,
       trim: true,
       index: true
-    },
+    },   
     sentiment: {
       type: String,
       enum: ['positive', 'negative', 'neutral'],
@@ -29,6 +29,10 @@ const VideoSentimentSchema = new mongoose.Schema(
       required: true,
       min: 0,
       max: 1
+    },
+    summary: {
+      type: String,
+      trim: true
     }
   },
   { 
