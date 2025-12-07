@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { connectDB } from "./db/index.js";
 import userRoutes from "./routes/user.routes.js";
+import analysisRoutes from "./routes/analysis.routes.js";
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.get("/health", (_req, res) => {
 });
 
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/analysis", analysisRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
