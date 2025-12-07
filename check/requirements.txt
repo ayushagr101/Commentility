@@ -1,0 +1,3 @@
+npm install axios chartjs-node-canvas chart.js node-fetch canvas
+npm install wordcloud
+npm install --save-dev @types/node

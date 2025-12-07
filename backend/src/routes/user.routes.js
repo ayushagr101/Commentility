@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { registerUser, loginUser, updateAvatar, getCurrentUser, logoutUser } from "../controllers/user.controller.js";
 import { getComments } from "../controllers/comments.js";
+import { analyzeComments } from "../controllers/analyzeComments.controller.js";
 import { authenticate } from "../middleware/authMiddleware.js";
 import { uploadSingle } from "../middleware/multer.js";
 
@@ -15,5 +16,6 @@ router.post("/logout", authenticate, logoutUser);
 // User routes
 router.patch("/avatar", authenticate, uploadSingle("avatar"), updateAvatar);
 router.post("/get-comments", getComments);
+router.post("/analyze-comments", analyzeComments);
 
 export default router;
