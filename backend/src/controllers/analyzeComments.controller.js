@@ -1,4 +1,5 @@
-import { fetchThreads } from './comments.js';
+import { fetchThreads, fetchVideoDetails } from './comments.js';
+import AnalysisHistory from '../models/analysisHistory.model.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -53,6 +54,109 @@ function flattenCommentsToText(threads) {
   return comments;
 }
 
+// Helper function to generate an enhanced summary of comments
+function generateCommentSummary(comments) {
+  if (!comments || comments.length === 0) {
+    return "No comments available for analysis.";
+  }
+
+  const totalComments = comments.length;
+  
+  // Calculate engagement metrics
+  const totalLikes = comments.reduce((sum, c) => sum + c.likeCount, 0);
+  const avgLikes = (totalLikes / totalComments).toFixed(1);
+  const highlyEngaged = comments.filter(c => c.likeCount > avgLikes * 2).length;
+  
+  // Get top comments
+  const topComments = [...comments]
+    .sort((a, b) => b.likeCount - a.likeCount)
+    .slice(0, 5);
+  
+  // Enhanced keyword extraction with better filtering
+  const wordFrequency = {};
+  const stopWords = new Set([
+    'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 
+    'is', 'was', 'are', 'were', 'this', 'that', 'it', 'be', 'have', 'has', 'had', 
+    'do', 'does', 'did', 'will', 'would', 'could', 'should', 'can', 'may', 'might',
+    'i', 'you', 'he', 'she', 'we', 'they', 'my', 'your', 'his', 'her', 'our', 'their',
+    'from', 'about', 'into', 'through', 'during', 'before', 'after', 'above', 'below',
+    'just', 'like', 'really', 'very', 'too', 'also', 'only', 'even', 'much', 'more',
+    'than', 'such', 'when', 'where', 'why', 'how', 'all', 'each', 'every', 'both',
+    'few', 'some', 'any', 'many', 'most', 'other', 'another', 'been', 'being',
+    'video', 'videos', 'comment', 'comments', 'watching', 'watch', 'watched'
+  ]);
+  
+  // Sentiment indicators
+  const positiveWords = new Set([
+    'great', 'amazing', 'awesome', 'excellent', 'perfect', 'love', 'loved', 'best',
+    'wonderful', 'fantastic', 'brilliant', 'beautiful', 'good', 'nice', 'thanks',
+    'thank', 'helpful', 'appreciate', 'appreciated', 'enjoyed', 'enjoy'
+  ]);
+  
+  const negativeWords = new Set([
+    'bad', 'terrible', 'awful', 'worst', 'hate', 'hated', 'poor', 'disappointing',
+    'disappointed', 'useless', 'waste', 'boring', 'bored', 'confused', 'confusing'
+  ]);
+  
+  let positiveCount = 0;
+  let negativeCount = 0;
+  
+  comments.forEach(comment => {
+    const words = comment.text.toLowerCase()
+      .replace(/[^\w\s]/g, ' ')
+      .split(/\s+/)
+      .filter(word => word.length > 3 && !stopWords.has(word));
+    
+    words.forEach(word => {
+      wordFrequency[word] = (wordFrequency[word] || 0) + 1;
+      if (positiveWords.has(word)) positiveCount++;
+      if (negativeWords.has(word)) negativeCount++;
+    });
+  });
+  
+  // Get top keywords (excluding sentiment words for themes)
+  const topKeywords = Object.entries(wordFrequency)
+    .filter(([word]) => !positiveWords.has(word) && !negativeWords.has(word))
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 6)
+    .map(([word]) => word);
+  
+  // Determine overall sentiment
+  let sentimentPhrase = "mixed reactions";
+  const sentimentRatio = positiveCount / (positiveCount + negativeCount + 1);
+  if (sentimentRatio > 0.7) {
+    sentimentPhrase = "overwhelmingly positive feedback";
+  } else if (sentimentRatio > 0.55) {
+    sentimentPhrase = "mostly positive reactions";
+  } else if (sentimentRatio < 0.3) {
+    sentimentPhrase = "predominantly negative feedback";
+  } else if (sentimentRatio < 0.45) {
+    sentimentPhrase = "mixed to negative reactions";
+  }
+  
+  // Build enhanced summary
+  let summary = `📊 **Engagement Overview**: This video has received ${totalComments} comments with ${sentimentPhrase}. `;
+  
+  if (highlyEngaged > 0) {
+    const engagementPercent = ((highlyEngaged / totalComments) * 100).toFixed(0);
+    summary += `${engagementPercent}% of comments show high engagement (above-average likes). `;
+  }
+  
+  if (topKeywords.length > 0) {
+    summary += `\n\n🔑 **Key Themes**: Viewers are discussing: ${topKeywords.slice(0, 5).join(', ')}. `;
+  }
+  
+  if (topComments.length > 0) {
+    const topComment = topComments[0];
+    const preview = topComment.text.length > 120 
+      ? topComment.text.substring(0, 120).trim() + '...' 
+      : topComment.text;
+    summary += `\n\n💬 **Top Comment** (${topComment.likeCount.toLocaleString()} likes): "${preview}"`;
+  }
+  
+  return summary;
+}
+
 // Main controller function
 export async function analyzeComments(req, res) {
   const tempFiles = [];
@@ -72,6 +176,16 @@ export async function analyzeComments(req, res) {
     
     console.log(`📹 Analyzing video: ${videoId}`);
     
+    // Fetch video details
+    let videoDetails = null;
+    try {
+      videoDetails = await fetchVideoDetails(videoId);
+      console.log(`📺 Video title: ${videoDetails.title}`);
+    } catch (error) {
+      console.error('Failed to fetch video details:', error);
+      // Continue without video details
+    }
+    
     // Fetch comments from YouTube (limit to 150 comments)
     const threads = await fetchThreads(videoId, 150);
     if (!threads || threads.length === 0) {
@@ -81,6 +195,10 @@ export async function analyzeComments(req, res) {
     // Flatten comments
     const comments = flattenCommentsToText(threads);
     console.log(`💬 Found ${comments.length} comments`);
+    
+    // Generate comment summary
+    const commentSummary = generateCommentSummary(comments);
+    console.log(`📝 Summary: ${commentSummary}`);
     
     // Prepare temp directory in check folder
     const checkDir = path.join(__dirname, '../../../check');
@@ -141,6 +259,9 @@ export async function analyzeComments(req, res) {
     const summary = {
       totalComments,
       videoId,
+      videoTitle: videoDetails?.title || 'Unknown Video',
+      channelTitle: videoDetails?.channelTitle || null,
+      commentSummary,
       topComment: topComment ? {
         text: topComment.text,
         author: topComment.author,
@@ -155,6 +276,38 @@ export async function analyzeComments(req, res) {
         fs.unlinkSync(file);
       }
     });
+    
+    // Save to history if user is authenticated
+    if (req.user) {
+      try {
+        await AnalysisHistory.create({
+          userId: req.user._id,
+          videoId,
+          videoTitle: videoDetails?.title || 'Unknown Video',
+          videoUrl: youtubeUrl,
+          channelTitle: videoDetails?.channelTitle,
+          commentSummary,
+          totalComments,
+          netSentiment,
+          sentimentGraph,
+          wordcloud,
+          topComment: topComment ? {
+            text: topComment.text,
+            author: topComment.author,
+            likes: topComment.likeCount
+          } : null,
+          topComments: topComments.slice(0, 3).map(c => ({
+            text: c.text,
+            author: c.author,
+            likes: c.likeCount
+          }))
+        });
+        console.log('✅ Analysis saved to history');
+      } catch (historyError) {
+        console.error('Failed to save history:', historyError);
+        // Don't fail the request if history save fails
+      }
+    }
     
     // Return results
     return res.json({

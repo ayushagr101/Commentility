@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Youtube, Sparkles, TrendingUp, MessageSquare, ThumbsUp, BarChart3 } from "lucide-react";
-import Balatro from "./Balatro";
+import { Youtube, Sparkles, TrendingUp, MessageSquare, ThumbsUp, BarChart3, Menu } from "lucide-react";
 import Sidebar from "../src/components/Sidebar";
 
 const HomePage = () => {
@@ -9,12 +8,6 @@ const HomePage = () => {
   const [results, setResults] = useState(null);
   const [error, setError] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-
-  const conversations = [
-    { title: "Comment Analysis Session", time: "2h ago" },
-    { title: "Sentiment Research", time: "Yesterday" },
-    { title: "Topic Modeling Discussion", time: "3 days ago" }
-  ];
 
   const handleAnalyze = async () => {
     if (!youtubeUrl.trim()) {
@@ -29,8 +22,9 @@ const HomePage = () => {
     try {
       const response = await fetch("http://localhost:8000/api/v1/users/analyze-comments", {
         method: "POST",
+        credentials: 'include', // Send cookies
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({ youtubeUrl }),
       });
@@ -56,32 +50,51 @@ const HomePage = () => {
     setError(null);
   };
 
-  return (
-    <div className="flex h-screen bg-black text-white overflow-hidden">
-      {/* Animated Background */}
-      <div className="absolute inset-0 opacity-20">
-        <Balatro isRotate={false} mouseInteraction={false} pixelFilter={700} />
-      </div>
-      
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-cyan-500 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-600 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-teal-500 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-      </div>
+  const handleHistorySelect = async (historyId) => {
+    try {
+      setError(null);
+      const response = await fetch(`http://localhost:8000/api/v1/users/history/${historyId}`, {
+        credentials: 'include' // Send cookies
+      });
 
+      if (!response.ok) {
+        throw new Error('Failed to load analysis');
+      }
+
+      const data = await response.json();
+      setResults(data.data);
+      setYoutubeUrl(''); // Clear URL input when viewing history
+    } catch (err) {
+      setError(err.message);
+      console.error('History load error:', err);
+    }
+  };
+
+  return (
+    <div className="flex h-screen bg-slate-900 text-white overflow-hidden">
+      {/* Subtle Background Gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 opacity-50" />
+      
       {/* Sidebar */}
       <Sidebar 
         sidebarOpen={sidebarOpen}
-        conversations={conversations}
-        onNewChat={handleNewAnalysis}
+        onHistorySelect={handleHistorySelect}
       />
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col relative z-10">
         {/* Header */}
-        <div className="h-16 border-b border-cyan-500 border-opacity-20 flex items-center px-6 bg-gray-900 bg-opacity-60 backdrop-blur-sm">
+        <div className="h-16 border-b border-slate-700 flex items-center px-6 bg-slate-800/50 backdrop-blur-sm">
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="mr-4 p-2 hover:bg-slate-700 rounded-lg transition-colors"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
           <div className="flex-1 text-center">
-            <h1 className="text-lg font-bold neon-cyan retro-title">Commentility - YouTube Comment Analyzer</h1>
+            <h1 className="text-xl font-bold professional-title gradient-text">
+              Commentility - YouTube Comment Analyzer
+            </h1>
           </div>
         </div>
 
@@ -90,23 +103,23 @@ const HomePage = () => {
           <div className="max-w-5xl mx-auto">
             {!results ? (
               // Input Section
-              <div className="animate-fadeIn">
+              <div className="fade-in-up">
                 {/* Welcome Section */}
                 <div className="text-center mb-12">
-                  <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-2xl shadow-cyan-500/50 animate-spin" style={{ animationDuration: '20s' }}>
-                    <Youtube className="w-12 h-12 text-white" />
+                  <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-blue-600 to-green-500 flex items-center justify-center shadow-xl">
+                    <Youtube className="w-10 h-10 text-white" />
                   </div>
-                  <h2 className="text-5xl font-white neon-cyan mb-4 retro-title flicker">
-                    ANALYZE YOUTUBE COMMENTS
+                  <h2 className="text-5xl font-bold professional-title mb-4 text-slate-100">
+                    Analyze YouTube Comments
                   </h2>
-                  <p className="text-xl text-cyan-400 text-opacity-70 mb-2">
-                    AI-Powered Sentiment Analysis & Word Cloud Generation
+                  <p className="text-xl text-slate-400 mb-2">
+                    AI-Powered Sentiment Analysis & Insights
                   </p>
                 </div>
 
                 {/* Input Form */}
-                <div className="bg-gradient-to-br from-gray-800 to-black border-2 border-cyan-500 border-opacity-30 rounded-2xl p-8 mb-8">
-                  <label className="block text-cyan-400 font-semibold mb-3 text-lg">
+                <div className="card-professional p-8 mb-8">
+                  <label className="block text-blue-400 font-semibold mb-3 text-lg">
                     Enter YouTube Video URL
                   </label>
                   <div className="flex gap-4">
@@ -116,16 +129,16 @@ const HomePage = () => {
                       onChange={(e) => setYoutubeUrl(e.target.value)}
                       onKeyPress={(e) => e.key === "Enter" && !isAnalyzing && handleAnalyze()}
                       placeholder="https://www.youtube.com/watch?v=..."
-                      className="flex-1 px-6 py-4 bg-black bg-opacity-60 rounded-xl text-white border-2 border-cyan-500 border-opacity-30 focus:border-cyan-400 outline-none text-base transition-all"
+                      className="flex-1 px-6 py-4 bg-slate-800 rounded-xl text-white border border-slate-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none text-base transition-all"
                       disabled={isAnalyzing}
                     />
                     <button
                       onClick={handleAnalyze}
                       disabled={isAnalyzing || !youtubeUrl.trim()}
-                      className={`px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 font-semibold transition-all shadow-lg shadow-cyan-500/30 ${
+                      className={`btn-primary ${
                         isAnalyzing || !youtubeUrl.trim()
                           ? "opacity-50 cursor-not-allowed"
-                          : "hover:scale-105 cursor-pointer"
+                          : "cursor-pointer"
                       }`}
                     >
                       {isAnalyzing ? (
@@ -140,7 +153,7 @@ const HomePage = () => {
                   </div>
                   
                   {error && (
-                    <div className="mt-4 p-4 bg-red-500 bg-opacity-20 border border-red-500 rounded-lg text-red-300">
+                    <div className="mt-4 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-300">
                       ⚠️ {error}
                     </div>
                   )}
@@ -148,32 +161,44 @@ const HomePage = () => {
 
                 {/* Features */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="p-6 bg-gradient-to-br from-gray-800 to-black border-2 border-cyan-500 border-opacity-30 rounded-2xl">
-                    <BarChart3 className="w-10 h-10 text-cyan-400 mb-4" />
-                    <h3 className="text-cyan-400 font-semibold text-lg mb-2">Sentiment Analysis</h3>
-                    <p className="text-gray-400 text-sm">Analyze positive, negative, and neutral sentiments</p>
+                  <div className="card-professional p-6">
+                    <BarChart3 className="w-10 h-10 text-blue-400 mb-4" />
+                    <h3 className="text-blue-400 font-semibold text-lg mb-2">Sentiment Analysis</h3>
+                    <p className="text-slate-400 text-sm">Analyze positive, negative, and neutral sentiments</p>
                   </div>
-                  <div className="p-6 bg-gradient-to-br from-gray-800 to-black border-2 border-cyan-500 border-opacity-30 rounded-2xl">
-                    <Sparkles className="w-10 h-10 text-cyan-400 mb-4" />
-                    <h3 className="text-cyan-400 font-semibold text-lg mb-2">Word Cloud</h3>
-                    <p className="text-gray-400 text-sm">Visualize most frequent words in comments</p>
+                  <div className="card-professional p-6">
+                    <Sparkles className="w-10 h-10 text-green-400 mb-4" />
+                    <h3 className="text-green-400 font-semibold text-lg mb-2">AI Summary</h3>
+                    <p className="text-slate-400 text-sm">Get intelligent summaries of comment themes</p>
                   </div>
-                  <div className="p-6 bg-gradient-to-br from-gray-800 to-black border-2 border-cyan-500 border-opacity-30 rounded-2xl">
-                    <TrendingUp className="w-10 h-10 text-cyan-400 mb-4" />
-                    <h3 className="text-cyan-400 font-semibold text-lg mb-2">Top Comments</h3>
-                    <p className="text-gray-400 text-sm">Discover the most liked comments</p>
+                  <div className="card-professional p-6">
+                    <TrendingUp className="w-10 h-10 text-blue-400 mb-4" />
+                    <h3 className="text-blue-400 font-semibold text-lg mb-2">Top Comments</h3>
+                    <p className="text-slate-400 text-sm">Discover the most liked comments</p>
                   </div>
                 </div>
               </div>
             ) : (
               // Results Section
-              <div className="animate-fadeIn space-y-6">
+              <div className="fade-in-up space-y-6">
+                {/* Video Title */}
+                {results.summary.videoTitle && (
+                  <div className="text-center mb-6">
+                    <h2 className="text-3xl font-bold professional-title text-slate-100 mb-2">
+                      {results.summary.videoTitle}
+                    </h2>
+                    {results.summary.channelTitle && (
+                      <p className="text-slate-400">By {results.summary.channelTitle}</p>
+                    )}
+                  </div>
+                )}
+                
                 {/* Header with New Analysis Button */}
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-3xl font-bold neon-cyan">Analysis Results</h2>
+                  <h3 className="text-2xl font-bold professional-title gradient-text">Analysis Results</h3>
                   <button
                     onClick={handleNewAnalysis}
-                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 font-semibold hover:scale-105 transition-all shadow-lg shadow-cyan-500/30"
+                    className="btn-success"
                   >
                     New Analysis
                   </button>
@@ -181,35 +206,48 @@ const HomePage = () => {
 
                 {/* Summary Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="p-6 bg-gradient-to-br from-gray-800 to-black border-2 border-cyan-500 border-opacity-30 rounded-2xl">
+                  <div className="card-professional p-6">
                     <div className="flex items-center gap-3 mb-3">
-                      <MessageSquare className="w-6 h-6 text-cyan-400" />
-                      <h3 className="text-cyan-400 font-semibold text-lg">Total Comments</h3>
+                      <MessageSquare className="w-6 h-6 text-blue-400" />
+                      <h3 className="text-blue-400 font-semibold text-lg">Total Comments</h3>
                     </div>
                     <p className="text-4xl font-bold text-white">{results.summary.totalComments}</p>
                   </div>
                   
-                  <div className="p-6 bg-gradient-to-br from-gray-800 to-black border-2 border-cyan-500 border-opacity-30 rounded-2xl">
+                  <div className="card-professional p-6">
                     <div className="flex items-center gap-3 mb-3">
-                      <TrendingUp className="w-6 h-6 text-cyan-400" />
-                      <h3 className="text-cyan-400 font-semibold text-lg">Net Sentiment</h3>
+                      <TrendingUp className="w-6 h-6 text-green-400" />
+                      <h3 className="text-green-400 font-semibold text-lg">Net Sentiment</h3>
                     </div>
                     <p className="text-4xl font-bold text-white">{results.summary.netSentiment}</p>
                   </div>
                 </div>
 
+                {/* Comment Summary */}
+                {results.summary.commentSummary && (
+                  <div className="card-professional p-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <Sparkles className="w-6 h-6 text-green-400" />
+                      <h3 className="text-green-400 font-semibold text-lg">AI-Powered Comment Summary</h3>
+                    </div>
+                    <div className="text-slate-200 text-base leading-relaxed whitespace-pre-line">
+                      {results.summary.commentSummary}
+                    </div>
+                  </div>
+                )}
+
                 {/* Visualizations */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {results.sentimentGraph && (
-                    <div className="p-6 bg-gradient-to-br from-gray-800 to-black border-2 border-cyan-500 border-opacity-30 rounded-2xl">
-                      <h3 className="text-cyan-400 font-semibold text-lg mb-4">Sentiment Distribution</h3>
+                    <div className="card-professional p-6">
+                      <h3 className="text-blue-400 font-semibold text-lg mb-4">Sentiment Distribution</h3>
                       <img src={results.sentimentGraph} alt="Sentiment Graph" className="w-full rounded-lg" />
                     </div>
                   )}
                   
                   {results.wordcloud && (
-                    <div className="p-6 bg-gradient-to-br from-gray-800 to-black border-2 border-cyan-500 border-opacity-30 rounded-2xl">
-                      <h3 className="text-cyan-400 font-semibold text-lg mb-4">Word Cloud</h3>
+                    <div className="card-professional p-6">
+                      <h3 className="text-green-400 font-semibold text-lg mb-4">Word Cloud</h3>
                       <img src={results.wordcloud} alt="Word Cloud" className="w-full rounded-lg" />
                     </div>
                   )}
@@ -217,14 +255,14 @@ const HomePage = () => {
 
                 {/* Top Comment */}
                 {results.summary.topComment && (
-                  <div className="p-6 bg-gradient-to-br from-gray-800 to-black border-2 border-cyan-500 border-opacity-30 rounded-2xl">
+                  <div className="card-professional p-6">
                     <div className="flex items-center gap-3 mb-4">
-                      <ThumbsUp className="w-6 h-6 text-cyan-400" />
-                      <h3 className="text-cyan-400 font-semibold text-lg">Top Comment</h3>
+                      <ThumbsUp className="w-6 h-6 text-blue-400" />
+                      <h3 className="text-blue-400 font-semibold text-lg">Top Comment</h3>
                     </div>
-                    <div className="bg-black bg-opacity-40 p-4 rounded-lg">
+                    <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700">
                       <p className="text-white mb-2">{results.summary.topComment.text}</p>
-                      <div className="flex items-center gap-4 text-sm text-gray-400">
+                      <div className="flex items-center gap-4 text-sm text-slate-400">
                         <span>👤 {results.summary.topComment.author}</span>
                         <span>👍 {results.summary.topComment.likes} likes</span>
                       </div>
@@ -234,13 +272,13 @@ const HomePage = () => {
 
                 {/* Top 3 Comments */}
                 {results.topComments && results.topComments.length > 0 && (
-                  <div className="p-6 bg-gradient-to-br from-gray-800 to-black border-2 border-cyan-500 border-opacity-30 rounded-2xl">
-                    <h3 className="text-cyan-400 font-semibold text-lg mb-4">Top 3 Comments</h3>
+                  <div className="card-professional p-6">
+                    <h3 className="text-blue-400 font-semibold text-lg mb-4">Top 3 Comments</h3>
                     <div className="space-y-4">
                       {results.topComments.map((comment, idx) => (
-                        <div key={idx} className="bg-black bg-opacity-40 p-4 rounded-lg">
+                        <div key={idx} className="bg-slate-800/50 p-4 rounded-lg border border-slate-700">
                           <p className="text-white mb-2">{comment.text}</p>
-                          <div className="flex items-center gap-4 text-sm text-gray-400">
+                          <div className="flex items-center gap-4 text-sm text-slate-400">
                             <span>👤 {comment.author}</span>
                             <span>👍 {comment.likes} likes</span>
                           </div>
@@ -254,17 +292,6 @@ const HomePage = () => {
           </div>
         </div>
       </div>
-
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .animate-fadeIn {
-          animation: fadeIn 0.5s ease-in-out forwards;
-        }
-      `}</style>
     </div>
   );
 };
