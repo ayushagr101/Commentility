@@ -1,5 +1,6 @@
 import { fetchThreads, fetchVideoDetails } from './comments.js';
 import AnalysisHistory from '../models/analysisHistory.model.js';
+import { generateGrokSummary } from '../services/grokService.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -196,8 +197,19 @@ export async function analyzeComments(req, res) {
     const comments = flattenCommentsToText(threads);
     console.log(`💬 Found ${comments.length} comments`);
     
-    // Generate comment summary
-    const commentSummary = generateCommentSummary(comments);
+    // Generate comment summary using Grok AI (with fallback)
+    let commentSummary;
+    try {
+      console.log('🤖 Attempting to generate AI summary with Grok...');
+      commentSummary = await generateGrokSummary(comments, {
+        title: videoDetails?.title,
+        channelTitle: videoDetails?.channelTitle
+      });
+      console.log('✅ Grok AI summary generated');
+    } catch (grokError) {
+      console.warn('⚠️ Grok API failed, using fallback summary:', grokError.message);
+      commentSummary = generateCommentSummary(comments);
+    }
     console.log(`📝 Summary: ${commentSummary}`);
     
     // Prepare temp directory in check folder
@@ -274,6 +286,7 @@ export async function analyzeComments(req, res) {
     tempFiles.forEach(file => {
       if (fs.existsSync(file)) {
         fs.unlinkSync(file);
+        console.log(`🗑️ Deleted temp file: ${path.basename(file)}`);
       }
     });
     

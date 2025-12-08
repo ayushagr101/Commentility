@@ -8,6 +8,7 @@ const HomePage = () => {
   const [results, setResults] = useState(null);
   const [error, setError] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [refreshHistory, setRefreshHistory] = useState(0); // Trigger for history refresh
 
   const handleAnalyze = async () => {
     if (!youtubeUrl.trim()) {
@@ -36,6 +37,7 @@ const HomePage = () => {
       }
 
       setResults(data.data);
+      setRefreshHistory(prev => prev + 1); // Trigger history refresh
     } catch (err) {
       setError(err.message);
       console.error("Analysis error:", err);
@@ -79,6 +81,7 @@ const HomePage = () => {
       <Sidebar 
         sidebarOpen={sidebarOpen}
         onHistorySelect={handleHistorySelect}
+        refreshTrigger={refreshHistory}
       />
 
       {/* Main Content */}
@@ -218,6 +221,7 @@ const HomePage = () => {
                     <div className="flex items-center gap-3 mb-3">
                       <TrendingUp className="w-6 h-6 text-green-400" />
                       <h3 className="text-green-400 font-semibold text-lg">Net Sentiment</h3>
+
                     </div>
                     <p className="text-4xl font-bold text-white">{results.summary.netSentiment}</p>
                   </div>

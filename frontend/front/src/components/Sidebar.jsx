@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 
 const Sidebar = ({ 
   sidebarOpen, 
-  onHistorySelect 
+  onHistorySelect,
+  refreshTrigger = 0 
 }) => {
   const { logout, user } = useAuth();
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const Sidebar = ({
   useEffect(() => {
     const fetchHistory = async () => {
       try {
+        setLoading(true);
         const response = await fetch('http://localhost:8000/api/v1/users/history', {
           credentials: 'include' // Send cookies
         });
@@ -34,7 +36,7 @@ const Sidebar = ({
     if (sidebarOpen) {
       fetchHistory();
     }
-  }, [sidebarOpen]);
+  }, [sidebarOpen, refreshTrigger]); // Re-fetch when refreshTrigger changes
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
