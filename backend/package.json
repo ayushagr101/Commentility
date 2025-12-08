@@ -1,21 +1,28 @@
 {
-  "name": "devordie",
+  "name": "commentility-backend",
   "version": "1.0.0",
-  "description": "a project inspired by ps",
+  "description": "Backend API for Commentility - AI-powered YouTube comment analysis platform",
   "keywords": [
     "nodejs",
     "mongoose",
     "express",
-    "backend"
+    "backend",
+    "youtube",
+    "sentiment-analysis",
+    "ai"
   ],
   "license": "ISC",
   "author": "OnlyBasics",
   "type": "module",
   "main": "src/index.js",
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "build": "echo 'No build step required for Node.js'"
   },
   "devDependencies": {
     "nodemon": "^3.1.10",
