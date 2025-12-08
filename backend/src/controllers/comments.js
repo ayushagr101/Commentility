@@ -61,6 +61,33 @@ function flattenComments(threads) {
   });
 }
 
+export async function fetchVideoDetails(videoId) {
+  try {
+    const { data } = await youtube.videos.list({
+      part: 'snippet,statistics',
+      id: videoId,
+    });
+
+    if (!data.items || data.items.length === 0) {
+      throw new Error('Video not found');
+    }
+
+    const video = data.items[0];
+    return {
+      title: video.snippet.title,
+      channelTitle: video.snippet.channelTitle,
+      description: video.snippet.description,
+      publishedAt: video.snippet.publishedAt,
+      viewCount: video.statistics.viewCount,
+      likeCount: video.statistics.likeCount,
+      commentCount: video.statistics.commentCount,
+    };
+  } catch (error) {
+    console.error('Failed to fetch video details:', error);
+    throw error;
+  }
+}
+
 export async function getComments(req, res) {
   try {
     const { videoId } = req.body;

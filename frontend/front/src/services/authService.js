@@ -16,7 +16,7 @@ api.interceptors.response.use(
     const isAuthEndpoint =
       error.config?.url?.includes("/users/login") ||
       error.config?.url?.includes("/users/signup") ||
-      error.config?.url?.includes("/users/current");
+      error.config?.url?.includes("/users/me");
 
     if (error.response?.status === 401 && !isAuthEndpoint) {
       // Redirect to login if unauthorized
@@ -29,7 +29,7 @@ api.interceptors.response.use(
 // Check current authentication status
 export const checkAuthStatus = async () => {
   try {
-    const response = await api.get("/users/current");
+    const response = await api.get("/users/me");
     return response.data.data.user || null;
   } catch (error) {
     return null;

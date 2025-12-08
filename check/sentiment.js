@@ -113,9 +113,13 @@ async function run() {
   let positive = 0, negative = 0, neutral = 0;
   const wordFreq = {};
 
-  console.log("🔍 Analyzing comments...");
+  console.log(`🔍 Analyzing ${comments.length} comments...`);
+  
+  // Limit to first 50 comments for faster analysis
+  const commentsToAnalyze = comments.slice(0, 50);
+  console.log(`⚡ Analyzing top ${commentsToAnalyze.length} comments for sentiment (faster processing)`);
 
-  for (const comment of comments) {
+  for (const comment of commentsToAnalyze) {
     const sentiment = await analyzeSentiment(comment);
 
     if (sentiment === "Positive") positive++;

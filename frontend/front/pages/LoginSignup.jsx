@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../src/context/AuthContext";
-import Balatro from "./Balatro";
-// AuthForm component moved outside to prevent re-creation on every render
+
+// AuthForm component
 const AuthForm = ({ type, email, setEmail, password, setPassword, handleSubmit, isLoading }) => (
   <div className="flex flex-col gap-5">
     <div className="relative">
@@ -11,7 +11,7 @@ const AuthForm = ({ type, email, setEmail, password, setPassword, handleSubmit, 
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Email"
-        className="w-full px-4 py-4 bg-black bg-opacity-40 rounded-xl text-white border-2 border-cyan-500 border-opacity-30 focus:border-cyan-400 outline-none text-base transition-all duration-300"
+        className="w-full px-4 py-4 bg-slate-800 rounded-xl text-white border border-slate-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none text-base transition-all"
         required
         autoComplete="off"
       />
@@ -23,7 +23,7 @@ const AuthForm = ({ type, email, setEmail, password, setPassword, handleSubmit, 
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
-          className="w-full px-4 py-4 bg-black bg-opacity-40 rounded-xl text-white border-2 border-cyan-500 border-opacity-30 focus:border-cyan-400 outline-none text-base transition-all duration-300"
+          className="w-full px-4 py-4 bg-slate-800 rounded-xl text-white border border-slate-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none text-base transition-all"
           required
           autoComplete="off"
         />
@@ -32,8 +32,8 @@ const AuthForm = ({ type, email, setEmail, password, setPassword, handleSubmit, 
     <button
       onClick={() => handleSubmit(type)}
       disabled={isLoading}
-      className={`w-full px-4 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-xl border-none shadow-lg shadow-cyan-500/30 text-base transition-all duration-300 ${
-        isLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:scale-[1.02] active:scale-[0.98]'
+      className={`btn-primary ${
+        isLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
       }`}
     >
       {isLoading ? (
@@ -74,11 +74,9 @@ const LoginSignup = () => {
     try {
       if (type === "login") {
         await login(email, password);
-        // Navigate to homepage on successful login
         navigate("/");
       } else if (type === "signup") {
         await signup(email, password);
-        // Show success message and flip to login
         handleFlip();
         setTimeout(() => setError("Account created! Please check your email to verify."), 600);
       } else if (type === "forgot") {
@@ -91,14 +89,12 @@ const LoginSignup = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Animated Background with ColorBends */}
-      <div className="absolute inset-0 opacity-100">
-        <Balatro
-  isRotate={false}
-  mouseInteraction={false}
-  pixelFilter={700}
-/>
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
+      {/* Subtle Background Pattern */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-blue-600 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-green-500 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500 rounded-full blur-3xl" />
       </div>
 
       {authMode === "default" ? (
@@ -116,18 +112,19 @@ const LoginSignup = () => {
                 className="absolute inset-0 backface-hidden"
                 style={{ backfaceVisibility: 'hidden' }}
               >
-                <div className="w-full h-full bg-gradient-to-br from-gray-800 via-black to-gray-800 border-2 border-cyan-500 border-opacity-30 rounded-3xl p-8 shadow-2xl shadow-cyan-500/20">
+                <div className="w-full h-full bg-slate-800/90 backdrop-blur-xl border border-slate-700 rounded-3xl p-8 shadow-2xl">
                   <div className="text-center mb-8">
-                    <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/50 animate-spin" style={{ animationDuration: '20s' }}>
+                    <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-600 to-green-500 flex items-center justify-center shadow-lg">
                       <span className="text-4xl font-bold text-white">C</span>
                     </div>
-                    <h2 className="text-4xl font-white neon-cyan mb-4 retro-title">
-                      Welcome
+                    <h2 className="text-4xl font-bold professional-title gradient-text mb-2">
+                      Welcome Back
                     </h2>
+                    <p className="text-slate-400 text-sm">Sign in to continue to Commentility</p>
                   </div>
 
                   {error && !isSignUp && (
-                    <div className="mb-4 p-3 bg-cyan-500 bg-opacity-10 border border-cyan-500 border-opacity-50 rounded-lg text-cyan-400 text-sm text-center animate-fadeIn">
+                    <div className="mb-4 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg text-blue-300 text-sm text-center fade-in-up">
                       {error}
                     </div>
                   )}
@@ -147,22 +144,22 @@ const LoginSignup = () => {
                   {!isSignUp && (
                     <>
                       <button
-                        className="mt-4 text-cyan-400 text-opacity-70 text-sm w-full text-center bg-none border-none cursor-pointer transition-colors duration-300 hover:text-cyan-300"
+                        className="mt-4 text-blue-400 text-sm w-full text-center transition-colors hover:text-blue-300"
                         onClick={() => {
                           setAuthMode("forgot");
                           setError(null);
                         }}
                       >
-                        Lost your password?
+                        Forgot your password?
                       </button>
 
                       <div className="mt-6 text-center">
-                        <p className="text-cyan-400 text-opacity-50 text-sm mb-3">
+                        <p className="text-slate-400 text-sm mb-3">
                           New to Commentility?
                         </p>
                         <button
                           onClick={handleFlip}
-                          className="px-8 py-3 bg-transparent border-2 border-cyan-500 text-cyan-400 font-bold rounded-xl cursor-pointer transition-all duration-300 hover:bg-cyan-500 hover:text-white"
+                          className="px-8 py-3 bg-transparent border-2 border-blue-500 text-blue-400 font-semibold rounded-xl transition-all hover:bg-blue-500 hover:text-white"
                         >
                           Create Account
                         </button>
@@ -177,21 +174,19 @@ const LoginSignup = () => {
                 className="absolute inset-0 backface-hidden"
                 style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
               >
-                <div className="w-full h-full bg-gradient-to-br from-gray-800 via-black to-gray-800 border-2 border-cyan-500 border-opacity-30 rounded-3xl p-8 shadow-2xl shadow-cyan-500/20">
+                <div className="w-full h-full bg-slate-800/90 backdrop-blur-xl border border-slate-700 rounded-3xl p-8 shadow-2xl">
                   <div className="text-center mb-8">
-                    <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/50 animate-spin" style={{ animationDuration: '20s', animationDirection: 'reverse' }}>
+                    <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-green-500 to-blue-600 flex items-center justify-center shadow-lg">
                       <span className="text-4xl font-bold text-white">C</span>
                     </div>
-                    <h2 className="text-4xl font-white neon-cyan mb-2 retro-title">
+                    <h2 className="text-4xl font-bold professional-title gradient-text mb-2">
                       Join Commentility
                     </h2>
-                    <p className="text-cyan-400 text-opacity-70 text-sm">
-                      Start Your Journey
-                    </p>
+                    <p className="text-slate-400 text-sm">Create your account to get started</p>
                   </div>
 
                   {error && isSignUp && (
-                    <div className="mb-4 p-3 bg-cyan-500 bg-opacity-10 border border-cyan-500 border-opacity-50 rounded-lg text-cyan-400 text-sm text-center animate-fadeIn">
+                    <div className="mb-4 p-3 bg-green-500/10 border border-green-500/30 rounded-lg text-green-300 text-sm text-center fade-in-up">
                       {error}
                     </div>
                   )}
@@ -210,12 +205,12 @@ const LoginSignup = () => {
 
                   {isSignUp && (
                     <div className="mt-6 text-center">
-                      <p className="text-cyan-400 text-opacity-50 text-sm mb-3">
+                      <p className="text-slate-400 text-sm mb-3">
                         Already have an account?
                       </p>
                       <button
                         onClick={handleFlip}
-                        className="px-8 py-3 bg-transparent border-2 border-cyan-500 text-cyan-400 font-bold rounded-xl cursor-pointer transition-all duration-300 hover:bg-cyan-500 hover:text-white"
+                        className="px-8 py-3 bg-transparent border-2 border-green-500 text-green-400 font-semibold rounded-xl transition-all hover:bg-green-500 hover:text-white"
                       >
                         Sign In
                       </button>
@@ -228,22 +223,22 @@ const LoginSignup = () => {
         </div>
       ) : (
         // Forgot Password Screen
-        <div className="w-full max-w-md z-10 animate-fadeIn">
-          <div className="bg-gradient-to-br from-gray-800 via-black to-gray-800 border-2 border-cyan-500 border-opacity-30 rounded-3xl p-8 shadow-2xl shadow-cyan-500/20">
+        <div className="w-full max-w-md z-10 fade-in-up">
+          <div className="bg-slate-800/90 backdrop-blur-xl border border-slate-700 rounded-3xl p-8 shadow-2xl">
             <div className="text-center mb-8">
-              <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/50 animate-spin" style={{ animationDuration: '20s' }}>
-                <span className="text-4xl font-bold text-black">🔐</span>
+              <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-600 to-green-500 flex items-center justify-center shadow-lg">
+                <span className="text-4xl">🔐</span>
               </div>
-              <h2 className="text-3xl font-black neon-cyan mb-2 retro-title">
+              <h2 className="text-3xl font-bold professional-title gradient-text mb-2">
                 Reset Password
               </h2>
-              <p className="text-cyan-400 text-opacity-70 text-sm">
+              <p className="text-slate-400 text-sm">
                 Enter your email to receive reset instructions
               </p>
             </div>
 
             {error && (
-              <div className="mb-4 p-3 bg-cyan-500 bg-opacity-10 border border-cyan-500 border-opacity-50 rounded-lg text-cyan-400 text-sm text-center animate-fadeIn">
+              <div className="mb-4 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg text-blue-300 text-sm text-center fade-in-up">
                 {error}
               </div>
             )}
@@ -259,7 +254,7 @@ const LoginSignup = () => {
             />
 
             <button
-              className="mt-6 text-cyan-400 text-opacity-70 text-sm w-full text-center bg-none border-none cursor-pointer transition-colors duration-300 hover:text-cyan-300"
+              className="mt-6 text-blue-400 text-sm w-full text-center transition-colors hover:text-blue-300"
               onClick={() => {
                 setAuthMode("default");
                 setError(null);
@@ -274,11 +269,6 @@ const LoginSignup = () => {
       )}
 
       <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        
         .perspective-1000 {
           perspective: 1000px;
         }
@@ -294,10 +284,6 @@ const LoginSignup = () => {
         
         .rotate-y-180 {
           transform: rotateY(180deg);
-        }
-        
-        .animate-fadeIn {
-          animation: fadeIn 0.5s ease-in-out forwards;
         }
       `}</style>
     </div>
