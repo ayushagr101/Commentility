@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Youtube, Sparkles, TrendingUp, MessageSquare, ThumbsUp, BarChart3, Menu } from "lucide-react";
 import Sidebar from "../src/components/Sidebar";
+import MeteorShower from "./MeteorShower";
 
 const HomePage = () => {
   const [youtubeUrl, setYoutubeUrl] = useState("");
@@ -74,6 +75,9 @@ const HomePage = () => {
 
   return (
     <div className="flex h-screen bg-slate-900 text-white overflow-hidden">
+      {/* Meteor Shower Background */}
+      <MeteorShower />
+      
       {/* Subtle Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 opacity-50" />
       
