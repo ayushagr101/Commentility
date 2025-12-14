@@ -230,12 +230,6 @@ Contributions are welcome! Please follow these steps:
 
 ---
 
-## 📝 License
-
-This project is licensed under the ISC License.
-
----
-
 ## 👨‍💻 Author
 
 **OnlyBasics** (Harshvardhan Singh Chauhan, Ayush Agarwal and Harsh Choudahry)
@@ -258,4 +252,5 @@ For issues, questions, or suggestions, please open an issue on GitHub.
 ---
 
 **Made with ❤️ for content creators**
+
 
